@@ -4,8 +4,11 @@ import imghdr
 
 
 def max_image(image_obj, w, h, extension):
-    if extension == 'jpg':
-        extension = 'jpeg'
+    """
+    Меняет размер изображения с сохранением пропорций
+    """
+    if extension == 'jpg':  # ругается на JPG в строке cropped_image.save(output format=extension.upper())
+        extension = 'jpeg'  # параметр format должен быть JPEG
     # Получаем текущие размеры изображения
     original_width, original_height = image_obj.size
 
@@ -23,7 +26,6 @@ def max_image(image_obj, w, h, extension):
     output = BytesIO()
 
     # Сохраняем изображение
-    # format=extension.upper() заменяем фактический тип файла на прописанный (есть вероятность несовпадения)
     resized_image.save(output, format=extension.upper())
 
     # Перемещаем указатель в начало файла
@@ -32,10 +34,13 @@ def max_image(image_obj, w, h, extension):
     return output
 
 
-
 def crop_image(image_obj, crop_width, crop_height, extension):
-    if extension == 'jpg':
-        extension = 'jpeg'
+    """
+    Меняет размер изображения и обрезает из центра
+    """
+    if extension == 'jpg':  # ругается на JPG в строке cropped_image.save(output format=extension.upper())
+        extension = 'jpeg'  # параметр format должен быть JPEG
+
     original_width, original_height = image_obj.size
 
     # Вычисляем соотношения сторон
@@ -61,12 +66,10 @@ def crop_image(image_obj, crop_width, crop_height, extension):
     # Масштабируем до целевого размера
     resized_image = cropped_image.resize((crop_width, crop_height), Image.Resampling.LANCZOS)
 
-
     # Создаем объект BytesIO для хранения изображения
     output = BytesIO()
 
     # Сохраняем изображение
-    # format=extension.upper() заменяем фактический тип файла на прописанный (есть вероятность несовпадения)
     cropped_image.save(output, format=extension.upper())
 
     # Перемещаем указатель в начало файла
