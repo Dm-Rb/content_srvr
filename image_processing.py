@@ -26,7 +26,7 @@ def max_image(image_obj, w, h, extension):
     output = BytesIO()
 
     # Сохраняем изображение
-    resized_image.save(output, format=extension.upper())
+    resized_image.save(output, format=extension.upper(), optimize=True)
 
     # Перемещаем указатель в начало файла
     output.seek(0)
@@ -70,7 +70,7 @@ def crop_image(image_obj, crop_width, crop_height, extension):
     output = BytesIO()
 
     # Сохраняем изображение
-    cropped_image.save(output, format=extension.upper())
+    cropped_image.save(output, format=extension.upper(), optimize=True)
 
     # Перемещаем указатель в начало файла
     output.seek(0)
