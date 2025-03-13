@@ -6,14 +6,11 @@ from PIL import Image
 from urllib.parse import urlparse
 import os
 from image_processing import max_image, crop_image, get_actual_image_type
+import yaml
+import uvicorn
+
 
 app = FastAPI()
-IMAGE_STORAGE_HOST = "http://minio-s3.first.belpak.lan:9000"
-# Словарь доступных обработчиков
-PROCESSORS = {
-    "max": max_image,  # Изменение размера изображения сохраняя пропорции
-    "crop": crop_image,  # Обрезка изображения
-}
 
 
 def get_file_extension(url: str) -> str:
@@ -35,6 +32,11 @@ def get_file_extension(url: str) -> str:
         extension = extension.lstrip('.')
 
     return extension
+
+
+@app.get("/")
+def read_root():
+    return {"message": "Server is running"}
 
 
 @app.get("/{image_path:path}")
@@ -80,4 +82,20 @@ async def process_image(
         except Exception as _ex:
             raise HTTPException(status_code=500, detail=f"An error occurred while processing the image file: {_ex}")
 
-# uvicorn server:app --host 127.0.0.1 --port 9000 --reload
+
+def load_config():
+    with open("config.yaml", "r") as f:
+        return yaml.safe_load(f)
+
+
+config = load_config()
+IMAGE_STORAGE_HOST = config["server"]["files_storage_host"]
+# Словарь доступных обработчиков
+PROCESSORS = {
+    "max": max_image,  # Изменение размера изображения сохраняя пропорции
+    "crop": crop_image,  # Обрезка изображения
+}
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host=config["server"]["host"], port=config["server"]["port"])
