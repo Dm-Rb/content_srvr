@@ -3,10 +3,12 @@ from io import BytesIO
 import imghdr
 
 
-def max_image(image_obj, w, h, extension):
+def max_image(image_obj, w, h, extension, quality=None):
     """
     Меняет размер изображения с сохранением пропорций
     """
+    if not quality:
+        quality = 90
     if extension == 'jpg':  # ругается на JPG в строке cropped_image.save(output format=extension.upper())
         extension = 'jpeg'  # параметр format должен быть JPEG
     # Получаем текущие размеры изображения
@@ -26,7 +28,7 @@ def max_image(image_obj, w, h, extension):
     output = BytesIO()
 
     # Сохраняем изображение
-    resized_image.save(output, format=extension.upper(), optimize=True)
+    resized_image.save(output, format=extension.upper(), optimize=True, quality=quality)
 
     # Перемещаем указатель в начало файла
     output.seek(0)
@@ -34,10 +36,12 @@ def max_image(image_obj, w, h, extension):
     return output
 
 
-def crop_image(image_obj, crop_width, crop_height, extension):
+def crop_image(image_obj, crop_width, crop_height, extension, quality):
     """
     Меняет размер изображения и обрезает из центра
     """
+    if not quality:
+        quality = 90
     if extension == 'jpg':  # ругается на JPG в строке cropped_image.save(output format=extension.upper())
         extension = 'jpeg'  # параметр format должен быть JPEG
 
@@ -70,7 +74,7 @@ def crop_image(image_obj, crop_width, crop_height, extension):
     output = BytesIO()
 
     # Сохраняем изображение
-    cropped_image.save(output, format=extension.upper(), optimize=True)
+    resized_image.save(output, format=extension.upper(), optimize=True, quality=quality)
 
     # Перемещаем указатель в начало файла
     output.seek(0)

@@ -44,7 +44,8 @@ async def process_image(
     image_path: str,
     mode: str = Query(None),
     width: int = Query(None),
-    height: int = Query(None)
+    height: int = Query(None),
+    quality: int = Query(None)
 ):
     # Тут фактический url до картинки на файловом хранилище
     image_url = f"{IMAGE_STORAGE_HOST}/{image_path}"
@@ -74,17 +75,21 @@ async def process_image(
         if mode not in PROCESSORS:
             raise HTTPException(status_code=500, detail="Unsupported mode")
 
+        if not quality:
+            quality = default_image_quality
+
+        print(f'quality: {str(quality)}')
         # Обрабатываем изображение
         try:
             image = Image.open(BytesIO(response.content))
-            processed_image = PROCESSORS[mode](image, width, height, extension)
+            processed_image = PROCESSORS[mode](image, width, height, extension, quality)
             return Response(content=processed_image.getvalue(), media_type=f"image/{extension}")
         except Exception as _ex:
             raise HTTPException(status_code=500, detail=f"An error occurred while processing the image file: {_ex}")
 
 
 def load_config():
-    with open("etc/content.yaml", "r") as f:
+    with open("config.yaml", "r") as f:
         return yaml.safe_load(f)
 
 
@@ -95,7 +100,8 @@ PROCESSORS = {
     "max": max_image,  # Изменение размера изображения сохраняя пропорции
     "crop": crop_image,  # Обрезка изображения
 }
+default_image_quality = config.get("default_image_quality", None)
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, host=config["server"]["host"], port=config["server"]["port"])
+    uvicorn.run(app, host=config["server"]["host"], port=config["server"]["port"], log_level="critical")
