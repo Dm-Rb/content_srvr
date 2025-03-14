@@ -84,7 +84,7 @@ async def process_image(
 
 
 def load_config():
-    with open("etc/content.yaml", "r") as f:
+    with open("config.yaml", "r") as f:
         return yaml.safe_load(f)
 
 
