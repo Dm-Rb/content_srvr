@@ -4,3 +4,4 @@ server:
   files_storage_host: "http://minio-s3.first.belpak.lan:9000"
 
 default_image_quality: 90
+log_flag : 0
