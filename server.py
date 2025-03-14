@@ -104,4 +104,5 @@ default_image_quality = config.get("default_image_quality", None)
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, host=config["server"]["host"], port=config["server"]["port"], log_level="critical")
+    # в аргументы log_level="critical"
+    uvicorn.run(app, host=config["server"]["host"], port=config["server"]["port"])
