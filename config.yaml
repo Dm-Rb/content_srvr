@@ -1,4 +1,4 @@
 server:
-  host: "127.0.0.1"
+  host: "minio-s3.first.belpak.lan"
   port: 5000
   files_storage_host: "http://minio-s3.first.belpak.lan:9000"
